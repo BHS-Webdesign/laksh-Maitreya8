@@ -1,0 +1,56 @@
+name: Set Upstream Remote
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Add this to allow manual triggering
+
+jobs:
+  set-upstream:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Git configuration
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions Bot"
+
+    - name: Extract assignment name and set upstream URL
+      run: |
+        # Extract the origin URL
+        ORIGIN_URL=$(git remote get-url origin)
+        echo "Origin URL: $ORIGIN_URL"
+        
+        # Extract the repository name from the URL
+        REPO_NAME=$(basename -s .git "$ORIGIN_URL")
+        echo "Repository Name: $REPO_NAME"
+
+        # Split the repository name into assignment name and student username
+        ASSIGNMENT_NAME=$(echo "$REPO_NAME" | cut -d '-' -f 1)
+        STUDENT_USERNAME=$(echo "$REPO_NAME" | cut -d '-' -f 2)
+        echo "Assignment Name: $ASSIGNMENT_NAME"
+        echo "Student Username: $STUDENT_USERNAME"
+
+        # Construct the upstream URL
+        UPSTREAM_URL="https://github.com/BHS-Java/${ASSIGNMENT_NAME}-gusreiber-nsd.git"
+        echo "Upstream URL: $UPSTREAM_URL"
+
+        # Add the upstream remote
+        git remote add upstream $UPSTREAM_URL || echo "Failed to add upstream remote"
+
+        # Verify that the upstream remote was added successfully
+        git remote -v
+
+    - name: Fetch and merge from upstream
+      run: |
+        # Fetch the upstream changes
+        git fetch upstream || echo "Failed to fetch upstream"
+        
+        # Merge upstream changes
+        git merge upstream/main --allow-unrelated-histories || echo "No merge needed, already up to date."
+      env:
+        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}

@@ -1,0 +1,57 @@
+{
+    // Editor settings
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.wordWrap": "on",
+    "editor.minimap.enabled": false,
+    "editor.autoClosingBrackets": "always",
+    "editor.autoClosingQuotes": "always",
+    // File exclusion settings
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/node_modules": true,
+        "**/target": true,
+        "**/build": true,
+        "**/.vscode": true,
+        "**/.github": true,
+        "**/.devcontainer": true,
+        "**/.gitignore": true,
+    },
+    // Java language-specific settings
+    "java.jdt.ls.vmargs": "-noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication",
+    "java.format.settings.url": ".vscode/java-formatter.xml",
+    "java.format.settings.profile": "GoogleStyle",
+    "java.dependency.syncWithFolderExplorer": true,
+    "java.dependency.packagePresentation": "flat",
+    "java.referencesCodeLens.enabled": true,
+    "java.implementationsCodeLens.enabled": true,
+    "java.signatureHelp.enabled": true,
+    // Java Test Runner settings
+    "java.test.config": [
+        {
+            "name": "JUnit 5",
+            "workingDirectory": "${workspaceFolder}",
+            "args": "--scan-classpath",
+            "vmargs": "-ea",
+            "env": {},
+        }
+    ],
+    // Debug settings
+    "debug.toolBarLocation": "docked",
+    "debug.openDebug": "openOnDebugBreak",
+    "debug.saveBeforeStart": "allEditorsInActiveGroup",
+    // Extensions recommendations
+    "extensions.ignoreRecommendations": false,
+    "extensions.recommendations": [
+        "vscjava.vscode-java-pack",
+        "redhat.java",
+        "vscjava.vscode-maven",
+        "pivotal.vscode-spring-boot",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+    ],
+    // Files encoding
+    "files.encoding": "utf8",
+    "files.autoSave": "onFocusChange"
+}

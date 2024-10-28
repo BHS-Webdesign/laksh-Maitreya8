@@ -6,6 +6,13 @@
             "name": "Main",
             "request": "launch",
             "mainClass": "Main",
+            "projectName": "laksh-Maitreya8_e4d9819a"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
             "projectName": "intro_7a413dca"
         },
         {

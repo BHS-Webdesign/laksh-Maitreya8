@@ -4,6 +4,7 @@
 import java.util.Scanner;
 
 public class Main {
+  // 2D array representing the Tic-Tac-Toe board, initialized with positions 1-9
   static char[][] board = {
     {'1', '2', '3'},
     {'4', '5', '6'},
@@ -11,53 +12,63 @@ public class Main {
   };
 
   public static void main(String[] args) {
+    // Scanner to read input from the player
     Scanner scanner = new Scanner(System.in);
-    char currentPlayer = 'X'; // Player is 'X', AI (Computer) is 'O'
+        
+    // The player starts with 'X', and the AI is 'O'
+    char currentPlayer = 'X';
+        
+    // Variable to check if the game has been won
     boolean gameWon = false;
 
+    // Display the initial board to the player
     printBoard();
 
+    // Game loop: maximum of 9 moves (since board is 3x3) or until game is won
     for (int i = 0; i < 9 && !gameWon; i++) {
       if (currentPlayer == 'X') {
-        // Player's turn
+        // Player's turn to move
         System.out.println("Player X, enter a number (1-9) to place your mark:");
         int move = scanner.nextInt();
 
+        // Validate the player's move
         if (isValidMove(move)) {
-          placeMove(move, currentPlayer);
-          printBoard();
-          gameWon = checkWin(currentPlayer);
+          placeMove(move, currentPlayer); // Place 'X' on the board
+          printBoard(); // Display updated board
+          gameWon = checkWin(currentPlayer); // Check if player has won
 
           if (gameWon) {
             System.out.println("Player X wins!");
+          
           } else {
-            currentPlayer = 'O'; // Switch to AI
+            currentPlayer = 'O'; // Switch to AI's turn
           }
+        
         } else {
           System.out.println("Invalid move, try again.");
-          i--; // Retry the same move
+          i--; // Retry same move
         }
+      
       } else {
-        // AI's turn
+      // AI's turn to move
         System.out.println("Computer's turn:");
-        int[] bestMove = findBestMove();
-        placeMove(bestMove[0], 'O');
-        printBoard();
-        gameWon = checkWin('O');
+        int[] bestMove = findBestMove(); // AI calculates its best move
+        placeMove(bestMove[0], 'O'); // AI places 'O' on board
+        printBoard(); // Display updated board
+        gameWon = checkWin('O'); // Check if AI has won
 
         if (gameWon) {
           System.out.println("Computer (O) wins!");
         } else {
-          currentPlayer = 'X'; // Switch to player
+          currentPlayer = 'X'; // Switch back to player's turn
         }
       }
 
-      // Check for a tie
+      // If all moves are made and no one has won, it’s a tie
       if (i == 8 && !gameWon) {
         System.out.println("It's a tie!");
       }
     }
-
     scanner.close();
   }
 
@@ -73,7 +84,7 @@ public class Main {
     System.out.println();
   }
 
-  // Method to check if the move is valid
+  // Method to check if the move is valid (if cell is not already taken)
   public static boolean isValidMove(int move) {
     switch (move) {
       case 1: return board[0][0] == '1';
@@ -89,7 +100,7 @@ public class Main {
     }
   }
 
-    // Method to place a move on the board
+  // Method to place a move on the board (either 'X' or 'O')
   public static void placeMove(int move, char player) {
     switch (move) {
       case 1: board[0][0] = player; break;
@@ -104,9 +115,9 @@ public class Main {
     }
   }
 
-  // Method to check if the player has won
+  // Method to check if the current player has won the game
   public static boolean checkWin(char player) {
-    // Check rows, columns, and diagonals for a win
+    // Check rows, columns, and diagonals for three in a row
     return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
     (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
     (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
@@ -117,11 +128,10 @@ public class Main {
     (board[2][0] == player && board[1][1] == player && board[0][2] == player);
   }
 
-  // Minimax algorithm to evaluate the best move for the AI
+  // Minimax algorithm: finds the optimal score for each possible move
   public static int minimax(boolean isMaximizing) {
-    // Base cases: Check for win, loss, or tie
-    if (checkWin('O')) return 1; // AI wins
-    if (checkWin('X')) return -1; // Player wins
+    if (checkWin('O')) return 1; // AI (O) wins
+    if (checkWin('X')) return -1; // Player (X) wins
     if (isBoardFull()) return 0; // Tie
 
     if (isMaximizing) {
@@ -149,7 +159,7 @@ public class Main {
     }
   }
 
-  // Find the best move for the AI using minimax
+  // Method to find the best move for the AI using minimax
   public static int[] findBestMove() {
     int bestMove = -1;
     int bestValue = Integer.MIN_VALUE;
@@ -166,11 +176,10 @@ public class Main {
         }
       }
     }
-
     return new int[] { bestMove, bestValue };
   }
 
-  // Check if the board is full (tie condition)
+  // Method to check if the board is full (indicating a tie)
   public static boolean isBoardFull() {
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {

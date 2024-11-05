@@ -101,7 +101,16 @@ public class Main {
     double[] qValues = qTable.get(state);
     double[] newQValues = qTable.get(newState);
     qValues[action - 1] = qValues[action - 1] + learningRate * (reward + discountFactor * maxQValue(newQValues) - qValues[action - 1]);
+  }
 
+  public static int bestMove(String state) {
+    qTable.putIfAbsent(state, new double[9])
+    double[] qValues = qTable.getState();
+    int BestMove = 1;
+    double bestMove = qValues[0];
+    for (int i = 1; i < 9; i++) {
+      
+    }
   }
 }
 

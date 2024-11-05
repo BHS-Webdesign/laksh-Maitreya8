@@ -1,7 +1,153 @@
 //use objects to record data
 //split them into classes
 
+
+import java.util.HashMap;
+import java.util.Random;
 import java.util.Scanner;
+
+public class Main {
+  static char[][] board = {
+    {'1', '2', '3'},
+    {'4', '5', '6'},
+    {'7', '8', '9'}
+
+  };
+  
+  static HashMap<String, double[]> qTable = new HashMap<>();
+  static double learningRate = 0.1;
+  static double discountFactor = 0.9;
+  static double explorationRate = 0.2;
+  static Random random = new Random();
+
+  public static void main(String[] args) {
+    trainAI(10000);
+    playGame();
+  }
+
+  public static void trainAI (int episodes) {
+    for (int i = 0; i < episodes; i++) {
+      resetBoard();
+      boolean gameOver = false;
+      char currentPlayer = 'X';
+      while (!gameOver) {
+        String state = getState();
+        int action;
+        if (currentPlayer == 'O') {
+          if (random.nextDouble() < explorationRate) {
+            action = randomMove;
+          } else {
+            action = bestMove(state);
+          }
+          
+          placeMove(action, currentPlayer);
+          String newState = getState();
+          gameOver = checkWin(currentPlayer) || isBoardFull();
+          double Reward = gameOver ?getReward(currentPlayer): -0.05;
+          updateQTable(state, action, reward, newState);
+          currentPlayer = 'X';
+
+        } else {
+          action = randomMove();
+          placeMove(action, currentPlayer);
+          gameOver = checkWin(currentPlayer) || isBoardFull();
+          currentPlayer = 'O';
+        }
+      }
+    }
+  }
+
+  public static void playGame() {
+    resetBoard();
+    printBoard();
+    Scanner scanner = new Scanner(System.in);
+    boolean gameOver = false;
+    char currentPlayer = 'X';
+    while (!gameover) {
+      if (currentPlayer == 'X') {
+        System.out.println("Enter a number(1-9): ");
+        int move = scanner.nextInt();
+        if (isValidMove(move)) {
+          placeMove(move, currentPlayer);
+          gameOver = checkWin(currentPlayer) || isBoardFull();
+          currentPlayer = 'O'
+        } 
+
+      } else {
+        int move;
+        if (random.nextDouble() < 0.3) {
+          move = randomMove();
+        } else if (random.nextDouble() < 0.5) {
+          move = findBestMove()[0];
+        } else {
+          move = bestMove(getState());
+        } 
+        
+        placeMove(move, currentPlayer);
+        printBoard();
+        gameOver = checkWin(currentPlayer) || isBoardFull();
+        currentPlayer = 'X';
+      }
+      
+      if (gameOver) System.out.println("Game Over!");
+    }
+
+    scanner.close();
+  }
+
+  public static void updateQTable(String state, int action, double reward, String newState) {
+    qTable.putIfAbsent(state, new Double[9]);
+    qTable.putIfAbsent(newState, new double[9]);
+    double[] qValues = qTable.get(state);
+    double[] newQValues = qTable.get(newState);
+    qValues[action - 1] = qValues[action - 1] + learningRate * (reward + discountFactor * maxQValue(newQValues) - qValues[action - 1]);
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+import java.util.Scanner;
+import java.util.Random;
 
 public class Main {
   // 2D array representing the Tic-Tac-Toe board, initialized with positions 1-9
@@ -10,6 +156,10 @@ public class Main {
     {'4', '5', '6'},
     {'7', '8', '9'}
   };
+  static HashMap<String, double[]> qtable = new HashMap<>();
+  static double learningRate = 0.1;
+  static double discountFactor = 0.9;
+  static double explorationWindow = 0.2;
 
   public static void main(String[] args) {
     // Scanner to read input from the player
@@ -191,3 +341,5 @@ public class Main {
     return true;
   }
 }
+
+*/

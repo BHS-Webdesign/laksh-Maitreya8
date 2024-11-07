@@ -109,9 +109,48 @@ public class Main {
     int BestMove = 1;
     double bestMove = qValues[0];
     for (int i = 1; i < 9; i++) {
-      
+      if (qValues[i] > bestValue && isValidMove(i + 1)) {
+        bestMove = i + 1;
+        bestValue = qValues[i]; 
+      }
+    }
+
+    return bestMove;
+  }
+
+  public static int minimax(boolean isMaxmizing) {
+    if (checkWin('O')) return 1;
+    if (checkWin('X')) return -1;
+    if (isBoardFull()) return 0;
+    
+    if (isMaxmizing) {
+      int bestScore = Integer.MIN_VALUE;
+      for (int i = 1; i <= 9, i++) {
+        if (isValidMove(i)) {
+          placeMove(i, 'O');
+          int score = minimax(false);
+          placeMove(i, (char)(i + 'O'));
+          bestScore = Math.max(score, bestScore);
+        }  
+      }
+
+    return bestScore;
+    } else {
+      int bestScore = Integer.MAX_VALUE;
+      for (int i = 1; i <= 9; i++) {
+        if (isValidMove(i)) {
+         placeMove(i, 'X');
+         int score = minimax(true);
+         placeMove(i, (char) (i + '0'));
+         bestScore = Math.min(score, bestScore);
+        }
+     }
+    
+     return bestScore;
     }
   }
+
+
 }
 
 

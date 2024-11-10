@@ -118,39 +118,55 @@ public class Main {
     return bestMove;
   }
 
-  public static int minimax(boolean isMaxmizing) {
+  public static int minimax(boolean isMaximizing) {
     if (checkWin('O')) return 1;
     if (checkWin('X')) return -1;
     if (isBoardFull()) return 0;
-    
-    if (isMaxmizing) {
+
+    if (isMaximizing) {
       int bestScore = Integer.MIN_VALUE;
-      for (int i = 1; i <= 9, i++) {
+      for (int i = 1; i <= 9; i++) {
         if (isValidMove(i)) {
           placeMove(i, 'O');
           int score = minimax(false);
-          placeMove(i, (char)(i + 'O'));
+          placeMove(i, (char) (i + '0'));
           bestScore = Math.max(score, bestScore);
-        }  
+        }
       }
-
-    return bestScore;
+      return bestScore;
     } else {
       int bestScore = Integer.MAX_VALUE;
       for (int i = 1; i <= 9; i++) {
         if (isValidMove(i)) {
-         placeMove(i, 'X');
-         int score = minimax(true);
-         placeMove(i, (char) (i + '0'));
-         bestScore = Math.min(score, bestScore);
+          placeMove(i, 'X');
+          int score = minimax(true);
+          placeMove(i, (char) (i + '0'));
+          bestScore = Math.min(score, bestScore);
         }
-     }
-    
-     return bestScore;
+      }
+      return bestScore;
     }
+  } 
+
+  public static int[] findBestMove() {
+    int bestMove = -1;
+    int bestValue = Integer.MIN_VALUE;
+    for (int i = 1; i <= 9; i++) {
+      if (isValidMove(i)) {
+        placeMove(i, 'O');
+        int moveValue = minimax(false);
+        placeMove(i, (char) (i + '0'));
+        if (moveValue > bestValue) {
+          bestMove = i;
+          bestValue = moveValue;
+        }
+      }
+    }
+
+    return new int[] {bestMove, bestValue};
   }
 
-
+  
 }
 
 

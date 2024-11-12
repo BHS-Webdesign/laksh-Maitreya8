@@ -166,7 +166,13 @@ public class Main {
     return new int[] {bestMove, bestValue};
   }
 
-  
+  public static double maxQValue(double[] qValues) {
+    double max = qValues[0];
+    for (double val : qValues) {
+      if (val > max)max = val;
+    }
+    return max;
+  }
 }
 
 

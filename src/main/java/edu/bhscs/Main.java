@@ -186,7 +186,19 @@ public class Main {
     return player == 'O' ? 1 : -1;
   }
 
+  public static void resetBoard() {
+    char c = '1';
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        board[i][j] = c++;
+      }
+    }
+  }
   
+  public static void placeMove(int move, char player) {
+    board[(move - 1) / 3][(move - 1) % 3] = player;
+  }
+
 }
 
 

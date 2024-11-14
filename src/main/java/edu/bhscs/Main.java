@@ -173,6 +173,20 @@ public class Main {
     }
     return max;
   }
+
+  public static int randomMove() {
+    int move;
+    do {
+      move = random.nextInt(9) + 1;
+    } while (!isValidMove(move));
+    return move;
+  }
+
+  public static double getReward(char player) {
+    return player == 'O' ? 1 : -1;
+  }
+
+  
 }
 
 

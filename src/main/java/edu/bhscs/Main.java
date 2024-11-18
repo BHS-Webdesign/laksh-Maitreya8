@@ -199,6 +199,31 @@ public class Main {
     board[(move - 1) / 3][(move - 1) % 3] = player;
   }
 
+  public static boolean isValidMove(int move) {
+    return board[(move - 1) / 3][(move - 1) % 3] != 'X' && board[(move - 1) / 3][(move - 1) % 3] != 'O';
+}
+
+public static boolean isBoardFull() {
+  for (char[] row : board) {
+    for (char cell : row) {
+      if (cell != 'X' && cell != 'O') return false;
+    }
+  }
+  return true;
+
+
+  public static boolean checkWin(char player) {
+    return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
+    (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
+    (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
+    (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
+    (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
+    (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
+    (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+    (board[2][0] == player && board[1][1] == player && board[0][2] == player);
+  }
+}
+
 }
 
 

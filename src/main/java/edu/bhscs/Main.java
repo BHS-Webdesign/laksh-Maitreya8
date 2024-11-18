@@ -201,30 +201,42 @@ public class Main {
 
   public static boolean isValidMove(int move) {
     return board[(move - 1) / 3][(move - 1) % 3] != 'X' && board[(move - 1) / 3][(move - 1) % 3] != 'O';
-}
+  }
 
-public static boolean isBoardFull() {
-  for (char[] row : board) {
-    for (char cell : row) {
-      if (cell != 'X' && cell != 'O') return false;
+  public static boolean isBoardFull() {
+    for (char[] row : board) {
+      for (char cell : row) {
+        if (cell != 'X' && cell != 'O') return false;
+      }
+    }
+    return true;
+
+
+    public static boolean checkWin(char player) {
+      return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
+      (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
+      (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
+      (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
+      (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
+      (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
+      (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+      (board[2][0] == player && board[1][1] == player && board[0][2] == player);
+    }
+
+    public static void printBoard() {
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          System.out.print(board[i][j]);
+          if (j < 2) System.out.print(" | ");
+        }
+        if (i < 2) System.out.println("\n---------");
+      }
+      System.out.println();
     }
   }
-  return true;
-
-
-  public static boolean checkWin(char player) {
-    return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
-    (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
-    (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
-    (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
-    (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
-    (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
-    (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
-    (board[2][0] == player && board[1][1] == player && board[0][2] == player);
-  }
 }
 
-}
+
 
 
 

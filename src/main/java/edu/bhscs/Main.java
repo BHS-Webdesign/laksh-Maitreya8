@@ -156,14 +156,17 @@ public class Main {
     }
   } 
 
+  // Finds the best move using Minimax
   public static int[] findBestMove() {
     int bestMove = -1;
     int bestValue = Integer.MIN_VALUE;
+
     for (int i = 1; i <= 9; i++) {
       if (isValidMove(i)) {
         placeMove(i, 'O');
         int moveValue = minimax(false);
-        placeMove(i, (char) (i + '0'));
+        placeMove(i, (char) (i + '0')); // Undo move
+
         if (moveValue > bestValue) {
           bestMove = i;
           bestValue = moveValue;
@@ -171,7 +174,16 @@ public class Main {
       }
     }
 
-    return new int[] {bestMove, bestValue};
+    return new int[] { bestMove, bestValue };
+  }
+
+  // Randomly selects a valid move
+  public static int randomMove() {
+    int move;
+    do {
+      move = random.nextInt(9) + 1;
+    } while (!isValidMove(move));
+    return move;
   }
 
   // Helper method for Q-Learning to find the maximum Q-value
@@ -183,29 +195,44 @@ public class Main {
     return max;
   }
 
-  public static int randomMove() {
-    int move;
-    do {
-      move = random.nextInt(9) + 1;
-    } while (!isValidMove(move));
-    return move;
-  }
 
   public static double getReward(char player) {
     return player == 'O' ? 1 : -1;
   }
 
+  // Resets the board to its initial state
   public static void resetBoard() {
-    char c = '1';
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        board[i][j] = c++;
+    board = new char[][] {
+      {'1', '2', '3'},
+      {'4', '5', '6'},
+      {'7', '8', '9'}
+    };
+  }
+
+// Gets the current state of the board as a string
+  public static String getState() {
+    StringBuilder state = new StringBuilder();
+    for (char[] row : board) {
+      for (char cell : row) {
+        state.append(cell);
       }
     }
+    return state.toString();
   }
   
+   // Places a move on the board
   public static void placeMove(int move, char player) {
-    board[(move - 1) / 3][(move - 1) % 3] = player;
+    switch (move) {
+      case 1: board[0][0] = player; break;
+      case 2: board[0][1] = player; break;
+      case 3: board[0][2] = player; break;
+      case 4: board[1][0] = player; break;
+      case 5: board[1][1] = player; break;
+      case 6: board[1][2] = player; break;
+      case 7: board[2][0] = player; break;
+      case 8: board[2][1] = player; break;
+      case 9: board[2][2] = player; break;
+    }
   }
 
   public static boolean isValidMove(int move) {
@@ -219,29 +246,29 @@ public class Main {
       }
     }
     return true;
+  }
 
+  public static boolean checkWin(char player) {
+    return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
+    (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
+    (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
+    (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
+    (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
+    (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
+    (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+    (board[2][0] == player && board[1][1] == player && board[0][2] == player);
+  }
 
-    public static boolean checkWin(char player) {
-      return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
-      (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
-      (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
-      (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
-      (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
-      (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
-      (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
-      (board[2][0] == player && board[1][1] == player && board[0][2] == player);
-    }
-
-    public static void printBoard() {
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-          System.out.print(board[i][j]);
-          if (j < 2) System.out.print(" | ");
-        }
-        if (i < 2) System.out.println("\n---------");
+  // Prints the current state of the board
+  public static void printBoard() {
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        System.out.print(board[i][j]);
+        if (j < 2) System.out.print(" | ");
       }
-      System.out.println();
+      if (i < 2) System.out.println("\n---------");
     }
+    System.out.println();
   }
 }
 

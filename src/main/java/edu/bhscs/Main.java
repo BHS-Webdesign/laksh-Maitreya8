@@ -56,22 +56,25 @@ public class Main {
     }
   }
 
+  // Plays the game between the user and the AI
   public static void playGame() {
     resetBoard();
     printBoard();
     Scanner scanner = new Scanner(System.in);
     boolean gameOver = false;
     char currentPlayer = 'X';
-    while (!gameover) {
+    while (!gameOver) {
       if (currentPlayer == 'X') {
-        System.out.println("Enter a number(1-9): ");
+        System.out.println("Enter a move (1-9): ");
         int move = scanner.nextInt();
         if (isValidMove(move)) {
           placeMove(move, currentPlayer);
+          printBoard();
           gameOver = checkWin(currentPlayer) || isBoardFull();
-          currentPlayer = 'O'
-        } 
-
+          currentPlayer = 'O';
+        } else {
+          System.out.println("Invalid move, try again.");
+        }
       } else {
         int move;
         if (random.nextDouble() < 0.3) {
@@ -80,19 +83,25 @@ public class Main {
           move = findBestMove()[0];
         } else {
           move = bestMove(getState());
-        } 
-        
+        }
         placeMove(move, currentPlayer);
         printBoard();
         gameOver = checkWin(currentPlayer) || isBoardFull();
         currentPlayer = 'X';
       }
-      
-      if (gameOver) System.out.println("Game Over!");
+      if (gameOver) {
+        if (checkWin('X')) {
+          System.out.println("Player X wins!");
+        } else if (checkWin('O')) {
+          System.out.println("Computer (O) wins!");
+        } else {
+          System.out.println("It's a tie!");
+        }
+      }
     }
-
     scanner.close();
   }
+
 
   public static void updateQTable(String state, int action, double reward, String newState) {
     qTable.putIfAbsent(state, new Double[9]);
@@ -103,7 +112,7 @@ public class Main {
   }
 
   public static int bestMove(String state) {
-    qTable.putIfAbsent(state, new double[9])
+    qTable.putIfAbsent(state, new double[9]);
     double[] qValues = qTable.getState();
     int BestMove = 1;
     double bestMove = qValues[0];
@@ -165,10 +174,11 @@ public class Main {
     return new int[] {bestMove, bestValue};
   }
 
+  // Helper method for Q-Learning to find the maximum Q-value
   public static double maxQValue(double[] qValues) {
-    double max = qValues[0];
-    for (double val : qValues) {
-      if (val > max)max = val;
+    double max = Double.NEGATIVE_INFINITY;
+    for (double q : qValues) {
+      max = Math.max(max, q);
     }
     return max;
   }

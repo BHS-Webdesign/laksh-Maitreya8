@@ -1,7 +1,3 @@
-//use objects to record data
-//split them into classes
-
-
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -14,7 +10,7 @@ public class Main {
 
   };
   
-  static HashMap<String, double[]> qTable = new HashMap<>();
+  static HashMap<String, double[]> QTable = new HashMap<>();
   static double learningRate = 0.1;
   static double discountFactor = 0.9;
   static double explorationRate = 0.2;
@@ -104,25 +100,25 @@ public class Main {
 
 
   public static void updateQTable(String state, int action, double reward, String newState) {
-    qTable.putIfAbsent(state, new Double[9]);
-    qTable.putIfAbsent(newState, new double[9]);
-    double[] qValues = qTable.get(state);
-    double[] newQValues = qTable.get(newState);
+    QTable.putIfAbsent(state, new double[9]);
+    QTable.putIfAbsent(newState, new double[9]);
+    double[] qValues = QTable.get(state);
+    double[] newQValues = QTable.get(newState);
     qValues[action - 1] = qValues[action - 1] + learningRate * (reward + discountFactor * maxQValue(newQValues) - qValues[action - 1]);
   }
 
+   // Returns the best move for the current state using Q-Learning
   public static int bestMove(String state) {
-    qTable.putIfAbsent(state, new double[9]);
-    double[] qValues = qTable.getState();
-    int BestMove = 1;
-    double bestMove = qValues[0];
+    QTable.putIfAbsent(state, new double[9]);
+    double[] qValues = QTable.get(state);
+    int bestMove = 1;
+    double bestValue = qValues[0];
     for (int i = 1; i < 9; i++) {
       if (qValues[i] > bestValue && isValidMove(i + 1)) {
         bestMove = i + 1;
-        bestValue = qValues[i]; 
+        bestValue = qValues[i];
       }
     }
-
     return bestMove;
   }
 
@@ -271,39 +267,3 @@ public class Main {
     System.out.println();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

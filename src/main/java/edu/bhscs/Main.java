@@ -54,47 +54,52 @@ public class Main {
 
   // Plays the game between the user and the AI
   public static void playGame() {
-    resetBoard();
-    printBoard();
     Scanner scanner = new Scanner(System.in);
-    boolean gameOver = false;
-    char currentPlayer = 'X';
-    while (!gameOver) {
-      if (currentPlayer == 'X') {
-        System.out.println("Enter a move (1-9): ");
-        int move = scanner.nextInt();
-        if (isValidMove(move)) {
+    boolean playAgain = true;
+
+    while (playAgain) {
+      resetBoard(); // Reset the board for a new game
+      printBoard(); // Display the empty board
+      boolean gameOver = false;
+      char currentPlayer = 'X'; // User starts
+
+      while (!gameOver) {
+        if (currentPlayer == 'X') { // User's turn
+          System.out.println("Enter a move (1-9): ");
+          int move = scanner.nextInt();
+          if (isValidMove(move)) {
+            placeMove(move, currentPlayer);
+            printBoard();
+            gameOver = checkWin(currentPlayer) || isBoardFull();
+            currentPlayer = 'O'; // Switch to AI
+          } else {
+            System.out.println("Invalid move, try again.");
+          }
+        } else { // AI's turn
+          int move = random.nextDouble() < 0.3 ? randomMove() : bestMove(getState());
           placeMove(move, currentPlayer);
           printBoard();
           gameOver = checkWin(currentPlayer) || isBoardFull();
-          currentPlayer = 'O';
-        } else {
-          System.out.println("Invalid move, try again.");
+          currentPlayer = 'X'; // Switch to user
         }
-      } else {
-        int move;
-        if (random.nextDouble() < 0.3) {
-          move = randomMove();
-        } else if (random.nextDouble() < 0.5) {
-          move = findBestMove()[0];
-        } else {
-          move = bestMove(getState());
-        }
-        placeMove(move, currentPlayer);
-        printBoard();
-        gameOver = checkWin(currentPlayer) || isBoardFull();
-        currentPlayer = 'X';
-      }
-      if (gameOver) {
-        if (checkWin('X')) {
-          System.out.println("Player X wins!");
-        } else if (checkWin('O')) {
-          System.out.println("Computer (O) wins!");
-        } else {
-          System.out.println("It's a tie!");
+
+        if (gameOver) {
+          if (checkWin('X')) {
+            System.out.println("Player X wins!");
+          } else if (checkWin('O')) {
+            System.out.println("Computer (O) wins!");
+          } else {
+            System.out.println("It's a tie!");
+          }
         }
       }
+
+      // Ask the player if they want to play again
+      System.out.println("Do you want to play again? (yes/no)");
+      String response = scanner.next().trim().toLowerCase();
+      playAgain = response.equals("yes");
     }
+    System.out.println("Thanks for playing! Goodbye.");
     scanner.close();
   }
 

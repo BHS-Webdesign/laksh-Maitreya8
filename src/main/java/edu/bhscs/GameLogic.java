@@ -6,10 +6,10 @@ public class GameLogic {
   }
 
   public void resetBoard() {
-    board = new char[][] {
-    {'1', '2', '3'},
-    {'4', '5', '6'},
-    {'7', '8', '9'}
+    board = new char[][]{
+      {'1', '2', '3'},
+      {'4', '5', '6'},
+      {'7', '8', '9'}
     };
   }
 
@@ -25,11 +25,16 @@ public class GameLogic {
   }
 
   public boolean isValidMove(int move) {
-    return board[(move - 1) / 3][(move - 1) % 3] != 'X' && board[(move - 1) / 3][(move - 1) % 3] != 'O';
+    return board[(move - 1) / 3][(move - 1) % 3] != 'X' &&
+    board[(move - 1) / 3][(move - 1) % 3] != 'O';
   }
 
   public void placeMove(int move, char player) {
     board[(move - 1) / 3][(move - 1) % 3] = player;
+  }
+
+  public void undoMove(int move) {
+    board[(move - 1) / 3][(move - 1) % 3] = (char) ('0' + move); // Reset to original number
   }
 
   public boolean isBoardFull() {
@@ -42,13 +47,13 @@ public class GameLogic {
   }
 
   public boolean checkWin(char player) {
-    return (board[0][0] == player && board[0][1] == player && board[0][2] == player) ||
+    return (board[0][0] == player && board[0][1] == player && board[0][2] == player) || // Rows
     (board[1][0] == player && board[1][1] == player && board[1][2] == player) ||
     (board[2][0] == player && board[2][1] == player && board[2][2] == player) ||
-    (board[0][0] == player && board[1][0] == player && board[2][0] == player) ||
+    (board[0][0] == player && board[1][0] == player && board[2][0] == player) || // Columns
     (board[0][1] == player && board[1][1] == player && board[2][1] == player) ||
     (board[0][2] == player && board[1][2] == player && board[2][2] == player) ||
-    (board[0][0] == player && board[1][1] == player && board[2][2] == player) ||
+    (board[0][0] == player && board[1][1] == player && board[2][2] == player) || // Diagonals
     (board[2][0] == player && board[1][1] == player && board[0][2] == player);
   }
 
@@ -59,6 +64,6 @@ public class GameLogic {
         state.append(cell);
       }
     }
-    return state.toString();
+  return state.toString();
   }
 }

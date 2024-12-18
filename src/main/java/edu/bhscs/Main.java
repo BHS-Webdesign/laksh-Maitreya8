@@ -1,11 +1,3 @@
-//Structure of the Game
-//This is TicTacToe(TTT)
-//User is X and AI is O
-//AI uses Qlearning(reinforced learning technique)
-//2 main phasess: learning phase and game phase
-
-
-
 import java.util.Scanner;
 
 public class Main {
@@ -23,51 +15,72 @@ public class Main {
       char currentPlayer = 'X'; // User starts
       boolean gameOver = false;
 
+      String previousState = null; // To track the AI's previous state
+      int previousMove = -1; // To track the AI's previous action
+
       while (!gameOver) {
         if (currentPlayer == 'X') { // User's turn
           System.out.println("Enter your move (1-9): ");
           int move = scanner.nextInt();
+
           if (game.isValidMove(move)) {
             game.placeMove(move, currentPlayer);
             game.printBoard();
-            
+
             if (game.checkWin('X')) {
               System.out.println("Player X wins!");
-              qTable.updateQTable(game.getState(), -1); // Negative reward for AI
+              // Penalize AI for losing
+              if (previousState != null && previousMove != -1) {
+                qTable.updateQTable(previousState, previousMove, -10, game.getState());
+              }
               gameOver = true;
             } else if (game.isBoardFull()) {
               System.out.println("It's a tie!");
-              qTable.updateQTable(game.getState(), 0); // Neutral reward
+              // Neutral reward for tie
+              if (previousState != null && previousMove != -1) {
+                qTable.updateQTable(previousState, previousMove, 0, game.getState());
+              }
               gameOver = true;
             }
+
             currentPlayer = 'O'; // Switch to AI
           } else {
-          System.out.println("Invalid move. Try again.");
+            System.out.println("Invalid move. Try again.");
           }
         } else { // AI's turn
-          int move = ai.makeMove(game, qTable);
+          String currentState = game.getState();
+          int move = ai.makeMove(game, qTable); // AI chooses a move
           System.out.println("Computer chose: " + move);
+
           game.placeMove(move, currentPlayer);
           game.printBoard();
 
           if (game.checkWin('O')) {
             System.out.println("Computer (O) wins!");
-            qTable.updateQTable(game.getState(), 1); // Positive reward for AI
+            // Reward AI for winning
+            qTable.updateQTable(currentState, move, 10, game.getState());
             gameOver = true;
           } else if (game.isBoardFull()) {
             System.out.println("It's a tie!");
-            qTable.updateQTable(game.getState(), 0); // Neutral reward
+            // Neutral reward for tie
+            qTable.updateQTable(currentState, move, 0, game.getState());
             gameOver = true;
           }
+
+          // Save current state and move for the next iteration
+          previousState = currentState;
+          previousMove = move;
+
           currentPlayer = 'X'; // Switch back to user
-        } 
+        }
       }
 
       System.out.println("Play again? (yes/no)");
       String response = scanner.next().toLowerCase();
       playAgain = response.equals("yes");
     }
+
     System.out.println("Thanks for playing!");
     scanner.close();
-  }  
+  }
 }

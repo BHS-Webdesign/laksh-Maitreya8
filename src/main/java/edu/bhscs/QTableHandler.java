@@ -2,8 +2,8 @@ import java.util.HashMap;
 
 public class QTableHandler {
   private final HashMap<String, double[]> qTable = new HashMap<>();
-  private final double learningRate = 0.5;
-  private final double discountFactor = 0.9;
+  private final double learningRate = 0.5;// gives more weight to new experiences
+  private final double discountFactor = 0.9;// considers future rewards to immediate rewards
 
   // This method updates the Q-value for a specific action taken in a given state. It considers both the immediate reward and the potential for future rewards based on the next state.
   public void updateQTable(String state, int action, double reward, String newState) {

@@ -11,7 +11,7 @@ public class Main {
 
     while (playAgain) {
       game.resetBoard(); // Reset the board for a new game
-      game.printBoard();
+      game.printBoard(); 
       char currentPlayer = 'X'; // User starts
       boolean gameOver = false;
 

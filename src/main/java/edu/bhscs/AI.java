@@ -2,9 +2,11 @@ import java.util.Random;
 
 public class AI {
   private double explorationRate = 0.3; // Initial exploration rate
+  // How often the AI picks a random move instead of the best-known move 
   private final Random random = new Random();
   private int gamesPlayed = 0; // Track the number of games played
 
+  // Determines the AI’s move based on the current number of games played
   public int makeMove(GameLogic game, QTableHandler qTable) {
     gamesPlayed++; // Increment game count
 
@@ -18,6 +20,7 @@ public class AI {
     }
   }
 
+  // Implements the Q-Learning strategy to decide the AI’s move
   private int makeMoveWithQLearning(GameLogic game, QTableHandler qTable) {
     String state = game.getState();
     qTable.initState(state);
@@ -39,6 +42,7 @@ public class AI {
     return move;
   }
 
+  // Picks a random valid move for the AI to play
   private int getRandomValidMove(GameLogic game) {
     int move;
     do {
@@ -47,6 +51,7 @@ public class AI {
     return move;
   }
 
+  // Selects the best move based on the Q-values for the current board state
   private int getBestMoveFromQTable(String state, QTableHandler qTable, GameLogic game) {
     double[] qValues = qTable.getQValues(state);
     int bestMove = -1;
@@ -66,6 +71,7 @@ public class AI {
     return bestMove;
   }
 
+  // Implements the Minimax algorithm to determine the best possible move
   private int getBestMoveWithMinimax(GameLogic game) {
     int bestMove = -1;
     int bestScore = Integer.MIN_VALUE;
@@ -86,6 +92,7 @@ public class AI {
     return bestMove;
   }
 
+  // Recursively evaluates moves using the Minimax algorithm
   private int minimax(GameLogic game, boolean isMaximizing) {
     if (game.checkWin('O')) return 10; // AI wins
     if (game.checkWin('X')) return -10; // Player wins

@@ -5,7 +5,7 @@ public class QTableHandler {
   private final double learningRate = 0.5;
   private final double discountFactor = 0.9;
 
-  // Overloaded version: Updates Q-values for mid-game moves
+  // This method updates the Q-value for a specific action taken in a given state. It considers both the immediate reward and the potential for future rewards based on the next state.
   public void updateQTable(String state, int action, double reward, String newState) {
     initState(state);
     initState(newState);
@@ -18,7 +18,7 @@ public class QTableHandler {
       (reward + discountFactor * maxQValue(newQValues) - qValues[action - 1]);
   }
 
-    // Overloaded version: Updates Q-values for final states (win, loss, tie)
+  // This method updates the Q-values for a terminal state (e.g., when the game ends with a win, loss, or tie). Unlike the first method, no future states are considered since the game is over.
   public void updateQTable(String state, double reward) {
     initState(state);
     double[] qValues = qTable.get(state);
@@ -29,17 +29,17 @@ public class QTableHandler {
   
   }
 
-  // Initialize state if it's not in the Q-table
+  // Initializes a new state in the Q-table if it doesn’t already exist.
   public void initState(String state) {
     qTable.putIfAbsent(state, new double[9]);
   }
 
-  // Get Q-values for a state
+  // Retrieves the Q-values for a given state from the Q-table.
   public double[] getQValues(String state) {
     return qTable.getOrDefault(state, new double[9]);
   }
 
-  // Find the maximum Q-value for a state
+  // Finds the highest Q-value in a given array of Q-values.
   private double maxQValue(double[] qValues) {
     double max = Double.NEGATIVE_INFINITY;
     for (double q : qValues) {

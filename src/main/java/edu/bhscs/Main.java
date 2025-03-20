@@ -1,64 +1,50 @@
 import java.util.Scanner;
 
 public class Main {
-  public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-    GameLogic game = new GameLogic();
-    AI ai = new AI();
-    QTableHandler qTable = new QTableHandler();
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Game game = new Game();
+        QLearningAI ai = new QLearningAI("qtable.txt");
+        Graph graph = new Graph();
 
-    boolean playAgain = true;
+        int gamesPlayed = 0;
+        int aiWins = 0;
 
-    while (playAgain) {
-      game.resetBoard(); // Reset the board for a new game
-      System.out.println("New game started!");
-      game.printBoard(); // Display the board
+        while (true) {
+            game.reset();
+            System.out.println("New Game! You are 'X'. AI is 'O'.");
 
-      char currentPlayer = 'X'; // User starts
-      boolean gameOver = false;
+            if (gamesPlayed % 2 == 1) game.aiMove(ai);
 
-      while (!gameOver) {
-        if (currentPlayer == 'X') { // User's turn
-          System.out.println("Enter your move (1-9): ");
-          int move = scanner.nextInt();
-          if (game.isValidMove(move)) {
-            game.placeMove(move, currentPlayer);
-            game.printBoard(); // Show updated board
-
-            if (game.checkWin('X')) {
-              System.out.println("Player X wins!");
-              gameOver = true;
-            } else if (game.isBoardFull()) {
-              System.out.println("It's a tie!");
-              gameOver = true;
+            while (!game.isGameOver()) {
+                game.printBoard();
+                game.playerMove(scanner);
+                if (game.isGameOver()) break;
+                game.aiMove(ai);
             }
-            currentPlayer = 'O'; // Switch to AI
-          } else {
-            System.out.println("Invalid move. Try again.");
-          }
-        } else { // AI's turn
-          int move = ai.makeMove(game, qTable);
-          System.out.println("Computer chose: " + move);
-          game.placeMove(move, currentPlayer);
-          game.printBoard(); // Show updated board
 
-          if (game.checkWin('O')) {
-            System.out.println("Computer (O) wins!");
-            gameOver = true;
-          } else if (game.isBoardFull()) {
-            System.out.println("It's a tie!");
-            gameOver = true;
-          }
-          currentPlayer = 'X'; // Switch back to user
+            game.printBoard();
+            char winner = game.getWinner();
+            if (winner == 'O') {
+                aiWins++;
+                System.out.println("AI wins!");
+            } else if (winner == 'X') {
+                System.out.println("You win!");
+            } else {
+                System.out.println("It's a draw!");
+            }
+
+            ai.learnFromGame(game.getBoard(), winner);
+            gamesPlayed++;
+
+            graph.display(aiWins, gamesPlayed);
+
+            System.out.print("Play again? (y/n): ");
+            if (!scanner.next().equalsIgnoreCase("y")) break;
         }
-      }
 
-      System.out.println("Play again? (yes/no)");
-      String response = scanner.next().toLowerCase();
-      playAgain = response.equals("yes");
+        ai.saveQTable();
+        scanner.close();
+        System.out.println("Game Over. AI knowledge saved.");
     }
-
-    System.out.println("Thanks for playing!");
-    scanner.close();
-  }
 }
